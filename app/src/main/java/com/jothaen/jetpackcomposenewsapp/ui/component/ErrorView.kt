@@ -1,4 +1,4 @@
-package com.jothaen.jetpackcomposenewsapp.ui.component.common
+package com.jothaen.jetpackcomposenewsapp.ui.component
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
@@ -11,14 +11,8 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun ErrorView(errorMessage: String, onRetryClick: () -> Unit) {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .wrapContentSize(Alignment.Center)
-    ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
+    Box(modifier = Modifier.fillMaxSize().wrapContentSize(Alignment.Center)) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Text(errorMessage, modifier = Modifier.padding(16.dp))
             Button(onClick = onRetryClick) { Text(text = "Retry") }
         }

@@ -1,28 +1,29 @@
-package com.jothaen.jetpackcomposenewsapp.ui
+package com.jothaen.jetpackcomposenewsapp.ui.screen.articles
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.jothaen.jetpackcomposenewsapp.presentation.NewsIntent
-import com.jothaen.jetpackcomposenewsapp.presentation.NewsScreenState
-import com.jothaen.jetpackcomposenewsapp.presentation.NewsScreenState.*
+import com.jothaen.jetpackcomposenewsapp.ui.screen.articles.ArticlesListIntent.*
+import com.jothaen.jetpackcomposenewsapp.ui.screen.articles.ArticlesListState.*
 import com.jothaen.jetpackcomposenewsapp.usecase.GetArticlesUseCase
 import com.jothaen.jetpackcomposenewsapp.util.applyStandardSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 
-class NewsViewModel(private val getArticlesUseCase: GetArticlesUseCase) : ViewModel() {
 
-    val state = MutableLiveData<NewsScreenState>(InitState)
+class ArticlesListViewModel(
+    private val getArticlesUseCase: GetArticlesUseCase,
+    private val navigator: ArticlesListNavigator
+) : ViewModel() {
+
+    val state = MutableLiveData<ArticlesListState>(InitState)
 
     private val disposables = CompositeDisposable()
 
-    fun processIntent(intent: NewsIntent) {
+    fun processIntent(intent: ArticlesListIntent) {
         when (intent) {
-            is NewsIntent.Load, NewsIntent.Refresh, NewsIntent.Retry -> loadArticles()
-            is NewsIntent.ShowDetails -> {
-               // TODO - implement navigation to details screen
-            }
+            is Fetch, Refresh, Retry -> loadArticles()
+            is ShowDetails -> navigator.openArticleDetailsScreen(intent.article)
         }
     }
 
@@ -42,7 +43,7 @@ class NewsViewModel(private val getArticlesUseCase: GetArticlesUseCase) : ViewMo
             .addTo(disposables)
     }
 
-    private fun emitState(state: NewsScreenState) {
+    private fun emitState(state: ArticlesListState) {
         this.state.value = state
     }
 }

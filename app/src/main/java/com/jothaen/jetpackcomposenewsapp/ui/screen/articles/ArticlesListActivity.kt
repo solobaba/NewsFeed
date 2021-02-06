@@ -1,4 +1,4 @@
-package com.jothaen.jetpackcomposenewsapp.ui
+package com.jothaen.jetpackcomposenewsapp.ui.screen.articles
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -10,23 +10,23 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.platform.setContent
 import com.jothaen.jetpackcomposenewsapp.R
-import com.jothaen.jetpackcomposenewsapp.presentation.NewsIntent
-import com.jothaen.jetpackcomposenewsapp.presentation.NewsIntent.*
-import com.jothaen.jetpackcomposenewsapp.presentation.NewsScreenState
-import com.jothaen.jetpackcomposenewsapp.presentation.NewsScreenState.*
-import com.jothaen.jetpackcomposenewsapp.ui.component.common.ErrorView
-import com.jothaen.jetpackcomposenewsapp.ui.component.common.LoadingView
-import com.jothaen.jetpackcomposenewsapp.ui.component.articleslist.ArticlesList
-import com.jothaen.jetpackcomposenewsapp.ui.component.common.Toolbar
+import com.jothaen.jetpackcomposenewsapp.ui.component.Toolbar
+import com.jothaen.jetpackcomposenewsapp.ui.component.ErrorView
+import com.jothaen.jetpackcomposenewsapp.ui.component.LoadingView
+import com.jothaen.jetpackcomposenewsapp.ui.component.ToolbarIcon
+
+import com.jothaen.jetpackcomposenewsapp.ui.screen.articles.ArticlesListIntent.*
+import com.jothaen.jetpackcomposenewsapp.ui.screen.articles.ArticlesListState.*
+import com.jothaen.jetpackcomposenewsapp.ui.screen.articles.view.ArticlesList
 import org.koin.android.viewmodel.ext.android.viewModel
 
-class NewsActivity : AppCompatActivity() {
+class ArticlesListActivity : AppCompatActivity() {
 
-    private val viewModel: NewsViewModel by viewModel()
+    private val viewModel: ArticlesListViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        postIntent(Load)
+        postIntent(Fetch)
 
         setContent {
             MaterialTheme {
@@ -34,15 +34,14 @@ class NewsActivity : AppCompatActivity() {
 
                 Column {
                     Toolbar()
-                    Render(state.value)
+                    RenderBody(state.value)
                 }
-
             }
         }
     }
 
     @Composable
-    private fun Render(state: NewsScreenState?) {
+    private fun RenderBody(state: ArticlesListState?) {
         when (state) {
             is Loading -> LoadingView()
             is Success -> ArticlesList(state.articles) { postIntent(ShowDetails(it)) }
@@ -54,12 +53,14 @@ class NewsActivity : AppCompatActivity() {
     private fun Toolbar() {
         Toolbar(
             title = getString(R.string.app_name),
-            rightIcon = Icons.Default.Refresh,
-            onRightIconClick = { postIntent(Refresh) }
+            rightIcon = ToolbarIcon(
+                icon = Icons.Default.Refresh,
+                onClick = { postIntent(Refresh) }
+            )
         )
     }
 
-    private fun postIntent(intent: NewsIntent) {
+    private fun postIntent(intent: ArticlesListIntent) {
         viewModel.processIntent(intent)
     }
 }
