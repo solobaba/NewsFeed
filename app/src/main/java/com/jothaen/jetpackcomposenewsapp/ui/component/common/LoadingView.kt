@@ -1,4 +1,4 @@
-package com.jothaen.jetpackcomposenewsapp.ui.component
+package com.jothaen.jetpackcomposenewsapp.ui.component.common
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
