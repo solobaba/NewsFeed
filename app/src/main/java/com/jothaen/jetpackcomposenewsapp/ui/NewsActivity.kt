@@ -2,40 +2,42 @@ package com.jothaen.jetpackcomposenewsapp.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.platform.setContent
+import com.jothaen.jetpackcomposenewsapp.presentation.Contract
 import com.jothaen.jetpackcomposenewsapp.presentation.NewsIntent
+import com.jothaen.jetpackcomposenewsapp.presentation.NewsIntent.*
 import com.jothaen.jetpackcomposenewsapp.presentation.NewsScreenState
+import com.jothaen.jetpackcomposenewsapp.presentation.NewsScreenState.*
 import com.jothaen.jetpackcomposenewsapp.ui.component.ErrorView
 import com.jothaen.jetpackcomposenewsapp.ui.component.LoadingView
-import com.jothaen.jetpackcomposenewsapp.ui.component.SuccessView
-import com.jothaen.jetpackcomposenewsapp.ui.theme.NewsAppTheme
-import com.jothaen.jetpackcomposenewsapp.viewmodel.NewsViewModel
+import com.jothaen.jetpackcomposenewsapp.ui.component.ArticlesList
 import org.koin.android.viewmodel.ext.android.viewModel
 
-class NewsActivity : AppCompatActivity() {
+class NewsActivity : AppCompatActivity(), Contract.View {
 
     private val viewModel: NewsViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        postIntent(NewsIntent.Load)
+        postIntent(Load)
 
         setContent {
-            NewsAppTheme {
+            MaterialTheme {
                 val state = viewModel.state.observeAsState()
-                render(state.value)
+                state.value?.let { render(it) }
             }
         }
     }
 
     @Composable
-    private fun render(state: NewsScreenState?) {
+    override fun render(state: NewsScreenState) {
         when (state) {
-            is NewsScreenState.Loading -> LoadingView()
-            is NewsScreenState.Error -> ErrorView(state.errorMessage) { postIntent(NewsIntent.Retry) }
-            is NewsScreenState.Success -> SuccessView(articlesCount = state.articles.size)
+            is Loading -> LoadingView()
+            is Success -> ArticlesList(state.articles) { postIntent(ShowDetails(it)) }
+            is Error -> ErrorView(state.errorMessage) { postIntent(Retry) }
         }
     }
 

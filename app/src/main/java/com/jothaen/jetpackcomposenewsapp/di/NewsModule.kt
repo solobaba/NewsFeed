@@ -1,7 +1,7 @@
 package com.jothaen.jetpackcomposenewsapp.di
 
+import com.jothaen.jetpackcomposenewsapp.ui.NewsViewModel
 import com.jothaen.jetpackcomposenewsapp.usecase.GetArticlesUseCase
-import com.jothaen.jetpackcomposenewsapp.viewmodel.NewsViewModel
 import org.koin.android.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 

@@ -1,11 +1,11 @@
 package com.jothaen.jetpackcomposenewsapp.network.api
 
-data class ArticlesResponse(
+data class ArticlesResponseDto(
     val totalArticles: Int,
-    val articles: List<Article>
+    val articles: List<ArticleDto>
 )
 
-data class Article(
+data class ArticleDto(
     val author: String?,
     val title: String,
     val description: String?,

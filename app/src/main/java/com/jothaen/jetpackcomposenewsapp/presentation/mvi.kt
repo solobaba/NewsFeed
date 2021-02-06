@@ -1,6 +1,17 @@
 package com.jothaen.jetpackcomposenewsapp.presentation
 
-import com.jothaen.jetpackcomposenewsapp.network.api.Article
+import com.jothaen.jetpackcomposenewsapp.presentation.model.Article
+
+interface Contract {
+
+    interface ViewModel {
+        fun processIntent(intent: NewsIntent)
+    }
+
+    interface View {
+        fun render(state: NewsScreenState)
+    }
+}
 
 sealed class NewsScreenState  {
     object InitState: NewsScreenState()
