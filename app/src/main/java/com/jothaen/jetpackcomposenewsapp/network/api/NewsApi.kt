@@ -6,7 +6,7 @@ import retrofit2.http.Query
 
 interface NewsApi {
 
-    @GET("/top-headlines")
+    @GET("top-headlines")
     fun getTopHeadlines(
         @Query("country") countryCode: String,
         @Query("apiKey") apiKey: String
