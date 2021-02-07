@@ -1,5 +1,6 @@
 package com.jothaen.jetpackcomposenewsapp.ui.screen.articles
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.jothaen.jetpackcomposenewsapp.ui.screen.articles.ArticlesListIntent.*
@@ -16,7 +17,10 @@ class ArticlesListViewModel(
     private val navigator: ArticlesListNavigator
 ) : ViewModel() {
 
-    val state = MutableLiveData<ArticlesListState>(InitState)
+    val state: LiveData<ArticlesListState>
+        get() = _state
+
+    private val _state = MutableLiveData<ArticlesListState>(InitState)
 
     private val disposables = CompositeDisposable()
 
@@ -44,6 +48,6 @@ class ArticlesListViewModel(
     }
 
     private fun emitState(state: ArticlesListState) {
-        this.state.value = state
+        _state.value = state
     }
 }
